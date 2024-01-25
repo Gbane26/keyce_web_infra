@@ -1,0 +1,7 @@
+---
+
+# sudo systemctl restart apache2
+- name: Redémarrer Apache
+  service: 
+    name: apache2
+    state: restarted

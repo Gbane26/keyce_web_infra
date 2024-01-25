@@ -1,0 +1,12 @@
+Projet Ansible de déploiement d'une infrastructure web (http/php/mariadb)
+
+Comment l'utiliser : 
+
+- Etape 1 (facultative): mise à jour d'Ansible
+                ansible-playbook playbook-controlnode.yml
+              
+- Etape 2 (à faire une seule fois) : déployer la clé publique SH de Ansible 
+            export ANSIBLE_HOST_KEY_CHECKING=False; ansible-playbook --ask-pass playbook-ssh.yml
+
+- Etape 3 : déploiement "principal" : 
+                  ansible-playbook playbook-all.yml

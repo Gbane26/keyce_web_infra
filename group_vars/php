@@ -1,0 +1,10 @@
+---
+
+# php_version: 8.2
+
+nfs_function: client
+nfs_mounts:
+  - server: "{{ hostvars[groups['web'][0]]['ansible_host'] }}"
+    server_fs: "{{ wordpress_path }}"
+    mountpoint: "{{ wordpress_path }}"
+    options: defaults

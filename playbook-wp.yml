@@ -1,0 +1,22 @@
+---
+
+- name: Déploiement sur les serveurs web
+  hosts: web
+  roles:
+    - common
+    - nfs
+    - apache
+    - wordpress
+
+- name: Déploiement sur les serveurs PHP
+  hosts: php
+  roles:
+    - common
+    - php-fpm
+    - nfs
+
+- name: Déploiement sur les serveurs DB
+  hosts: db
+  roles:
+    - common
+    - lukasic.mariadb

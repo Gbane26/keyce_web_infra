@@ -1,0 +1,20 @@
+---
+
+#ansible -m apt -a "update_cache=yes name=* state=latest" all
+- name: Mettre à jour les systèmes
+  package:
+    # update_cache: yes
+    name: "*"
+    state: latest
+
+#ansible -m hostname -a "name={{ inventory_hostname }}" all
+- name: Changer le hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+#ansible -m lineinfile -a "path=/etc/hosts regexp='^127\.0\.1\.1' line='127.0.1.1       {{ inventory_hostname }}'" all
+- name: Configurer la résolution du hostname
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1       {{ inventory_hostname }}"

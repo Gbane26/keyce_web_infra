@@ -1,0 +1,47 @@
+---
+
+- name: Inclure un fichier de variable selon la famille de distribution
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+      - "{{ ansible_os_family }}.yml"
+      skip: True
+
+# sudo apt install apache2
+- name: Installer les paquets nécessaires
+  package:
+    name: "{{ apache_package_name }}"
+    state: latest
+
+# Autre forme qui occupe moins de lignes
+#- name: Installer Apache
+#  apt: name=apache2 state=latest
+
+# Désactivation du virtualhost 000-default de Apache
+- name: Désactivation de 000-default
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify: Redémarrer Apache
+
+# Création du vhost wordpress
+- name: Configuration du vhost wordpress
+  template:
+    src: templates/vhost-wordpress
+    dest: /etc/apache2/sites-available/wordpress.conf
+  notify: Redémarrer Apache
+
+# Activation du vhost wordpress
+- name: Activation du vhost wordpress
+  file:
+    src: /etc/apache2/sites-available/wordpress.conf
+    dest: /etc/apache2/sites-enabled/wordpress.conf
+    state: link
+  notify: Redémarrer Apache
+
+# sudo a2enmod proxy_fcgi
+- name: Activation du module proxy_fcgi
+  apache2_module:
+    name: proxy_fcgi
+    state: present
+  notify: Redémarrer Apache

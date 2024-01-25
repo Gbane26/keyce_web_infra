@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+    ServerAdmin {{ project_email }}
+    DocumentRoot {{ wordpress_path }}
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+# groups['php'] : liste des hosts du groupe php
+# groups['php'][0] : premier serveur du groupe php
+# hostvars[host]['ansible_host'] : variable ansible_host du serveur 'host'
+
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ hostvars[groups['php'][0]]['ansible_host'] }}:{{ phpfpm_port }}{{ wordpress_path }}/$1
+
+    DirectoryIndex /index.php index.php
+</VirtualHost>

@@ -1,0 +1,36 @@
+---
+
+# sudo apt install php-fpm php-mysql
+- name: Installer les paquets nécessaires
+  package:
+    name: 
+      - php-fpm
+      - php-mysql
+    state: latest
+
+# Avec Ansible, les modules command et shell ne doivent être utilisés
+# qu'en dernier recours, c'est à dire, lorsqu'il n'existe pas de 
+# module spécifique pour réaliser une opération.
+# Ici, il n'existe pas de module pour récupérer directement la version de PHP
+# php_version.stdout contient désormais le numéro de version de PHP
+
+- name: Récupérer la version de PHP
+  shell: php --version | head -n 1 | sed -E 's/^PHP ([0-9]\.[0-9]).*/\1/'
+  register: php_version
+  changed_when: false
+
+#- name: Afficher le numéro de version de PHP
+#  debug:
+#    var: php_version.stdout
+
+- name: Ensure php-fpm is running and starts on boot
+  service:
+    name: "php{{ php_version.stdout }}-fpm"
+    state: started
+    enabled: yes
+
+- name: Configuration de PHP-FPM
+  template:
+    src: templates/fpm.conf
+    dest: "/etc/php/{{ php_version.stdout }}/fpm/pool.d/wordpress.conf"
+  notify: Redémarrer PHP-FPM

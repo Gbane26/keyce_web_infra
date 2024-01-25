@@ -1,0 +1,6 @@
+---
+
+- name: Redémarrer PHP-FPM
+  service: 
+    name: "php{{ php_version.stdout }}-fpm"
+    state: restarted

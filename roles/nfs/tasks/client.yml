@@ -1,0 +1,15 @@
+---
+
+- name: Install NFS client packages
+  package:
+    name: nfs-common
+    state: latest
+
+- name: Configure and mount NFS
+  ansible.posix.mount:
+    src: "{{ item.server }}:{{ item.server_fs }}"
+    path: "{{ item.mountpoint }}"
+    opts: "{{ item.options }}"
+    state: mounted
+    fstype: nfs
+  with_items: "{{ nfs_mounts }}"

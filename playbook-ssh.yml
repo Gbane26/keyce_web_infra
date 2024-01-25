@@ -1,0 +1,16 @@
+---
+
+# A executer :
+# ansible-playbook --ask-pass playbook-ssh.yml
+
+- name: Déploiement sur la clé SSH
+  hosts: all
+  gather_facts: no 
+  tasks:
+  #ansible -m authorized_key -a "user=ahamadou state=present key={{ lookup('file','/home/ahamadou/.ssh/id_ed25519.pub') }}" -i inventory --ask-pass all
+  - name: Déploiement de la clé publique SSh
+    authorized_key:
+      user: ahamadou
+      state: present
+      key: "{{ lookup('file','/home/ahamadou/.ssh/id_ed25519.pub') }}"
+

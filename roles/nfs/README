@@ -1,0 +1,26 @@
+
+Example Playbook usage :
+
+- name: Server Playbook
+  hosts: nfs-server
+  roles:
+    - nfs
+  vars:
+    - nfs_function: server
+    - nfs_exports:
+      - fs: /example/fs
+        client: example-client
+        options: rw,sync,fsid=0,no_subtree_check
+
+- name: Client Playbook
+  hosts: nfs-client
+  roles:
+    - nfs
+  vars:
+    - nfs_function: client
+    - nfs_mounts:
+      - server: nfs-server
+        server_fs: /example/fs
+        mountpoint: /exemple/mountpoint
+        options: defaults
+

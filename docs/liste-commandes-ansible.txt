@@ -1,0 +1,11 @@
+ansible -m ping -i inventory all
+
+ansible -m authorized_key -a "user=ahamadou state=present key={{ lookup('file','/home/ahamadou/.ssh/id_ed25519.pub') }}" -i inventory --ask-pass all
+
+ansible -m hostname -a "name={{ inventory_hostname }}" all
+
+ansible -m lineinfile -a "path=/etc/hosts regexp='^127\.0\.1\.1' line='127.0.1.1        {{ inventory_hostname }}'" all 
+
+ansible -m pip -a "name=ansible state=latest executable=/home/ahamadou/.local/bin/pip extra_args=--break-system-packages" --become-user=ahamadou localhost
+
+ansible -m apt -a "name=python3-apt state=latest" all

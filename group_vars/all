@@ -1,0 +1,14 @@
+---
+#Liste des variables pour tous les noeuds
+
+project_name: Keyce Web infrastructure  #Nom du projet
+project_url: kwi.keyce
+project_email: admin@kwi.keyce
+
+wordpress_path: /var/www/wordpress/
+
+phpfpm_port: 5555
+
+wordpress_db: wordpress
+wordpress_db_user: wp_user
+wordpress_db_pass: wp_passwd

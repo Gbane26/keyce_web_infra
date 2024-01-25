@@ -1,0 +1,13 @@
+---
+
+mariadb_server_params:
+  - option: "bind-address"
+    section: "mysqld"
+    value: "0.0.0.0"
+mariadb_databases:
+  - "{{ wordpress_db }}"
+mariadb_users:
+  - host: "%"
+    name: "{{ wordpress_db_user }}"
+    password: "{{ wordpress_db_pass }}"
+    priv: "{{ wordpress_db }}.*:ALL"

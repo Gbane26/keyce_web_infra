@@ -1,0 +1,9 @@
+---
+
+galaxy_info:
+  role_name: nfs
+  author: openit
+  description: Ansible Server/Client NFS role
+  license: WTFPL
+  min_ansible_version: "2.8"
+dependencies: []

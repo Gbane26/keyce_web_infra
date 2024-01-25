@@ -1,0 +1,13 @@
+---
+# variables du groupe web
+
+wordpress_version: 6.4.2
+
+wordpress_owner: www-data
+wordpress_group: www-data
+
+nfs_function: server
+nfs_exports:
+  - fs: "{{ wordpress_path }}"
+    client: "{{ hostvars[groups['php'][0]]['ansible_host'] }}"
+    options: rw,sync,fsid=0,no_subtree_check

@@ -1,0 +1,7 @@
+---
+
+wordpress_path: /var/www/wordpress/
+wordpress_repo: https://github.com/WordPress/WordPress.git
+wordpress_version: 6.4.2
+wordpress_owner: www-data
+wordpress_group: www-data

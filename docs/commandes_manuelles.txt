@@ -1,0 +1,72 @@
+Sur infra1 :
+
+# Installer apache2
+sudo apt install apache2
+
+# Télécharger et dézipper Wordpress
+wget https://wordpress.org/latest.zip
+sudo apt install unzip
+unzip latest.zip
+sudo mv wordpress /var/www/
+sudo chown -R www-data:www-data /var/www/wordpress
+
+# Configurer Apache 
+sudo nano /etc/apache2/sites-enabled/000-default.conf
+    <VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/wordpress
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://10.42.42.8:5555/var/www/wordpress/$1
+
+        DirectoryIndex /index.php index.php
+    </VirtualHost>
+
+# Redémarrer Apache
+sudo a2enmod proxy_fcgi
+sudo systemctl restart apache2
+
+# Créer un partage de fichiers
+sudo apt install nfs-kernel-server
+sudo nano /etc/exports
+    /var/www/wordpress	10.42.42.8(rw,sync,fsid=0,no_subtree_check)
+sudo systemctl restart nfs-kernel-server
+
+
+Sur Infra2 :
+
+# Installer et configurer PHP-FPM
+sudo apt install php-fpm php-mysql
+sudo nano /etc/php/8.2/fpm/pool.d/www.conf
+# Commenter la ligne "listen =" et remplacer :
+    ;listen = /run/php/php8.2-fpm.sock
+    listen = 5555
+
+sudo systemctl restart php8.2-fpm
+
+# Accéder au partage de fichiers :
+sudo apt install nfs-common
+
+sudo nano /etc/fstab
+    10.42.42.7:/var/www/wordpress	/var/www/wordpress	nfs	defaults	0	0
+
+sudo mkdir -p /var/www/wordpress
+sudo mount /var/www/wordpress
+
+
+Sur Infra3 :
+
+# Installer et configurer MariaDB
+sudo apt install mariadb-server
+sudo nano /etc/mysql/mariadb.conf.d/51-bind-address.cnf
+    [mysqld]
+    bind-address = 0.0.0.0
+
+sudo systemctl restart mariadb
+
+sudo mariadb 
+    CREATE DATABASE wordpress;
+    GRANT ALL PRIVILEGES on wordpress.* TO wp_user@'%' IDENTIFIED BY 'wp_passwd';
+    FLUSH PRIVILEGES;

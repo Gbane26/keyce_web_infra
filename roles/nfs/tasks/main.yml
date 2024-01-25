@@ -1,0 +1,9 @@
+---
+
+- name: Include Server tasks
+  include_tasks: server.yml
+  when: nfs_function == "server"
+
+- name: Include Client tasks
+  include_tasks: client.yml
+  when: nfs_function == "client"
